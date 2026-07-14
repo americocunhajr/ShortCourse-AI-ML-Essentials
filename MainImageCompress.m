@@ -1,0 +1,18 @@
+clc; clear; close all;
+Img = imread('LaTourEiffel.jpg'); 
+[ImgMatrix,m,n] = Image2Matrix(Img);
+[U,S,V] = svd(ImgMatrix);
+k   = 35;
+U_r = U(:,1:k);
+S_r = diag(S(1:k,1:k)); 
+V_r = V(:,1:k);
+ImgMatrix_r = U_r*diag(S_r)*V_r';
+Img_r = Matrix2Image(ImgMatrix_r,m,n);
+mem_o = numel(ImgMatrix);
+mem_r = numel(U_r)+numel(S_r)+numel(V_r);
+mem_s = (1 - mem_r/mem_o)*100;
+fprintf('Original memory: %d \n',mem_o);
+fprintf('Reduced  memory: %d \n',mem_r);
+fprintf('Memory savings : %.2f%%\n' ,mem_s);
+subplot(1,2,1); imshow(Img ); title('Original');
+subplot(1,2,2); imshow(Img_r); title('Reduced');
